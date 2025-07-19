@@ -10,6 +10,7 @@ from PyQt5.QtCore import Qt, QTimer
 from cryptography.fernet import Fernet
 import uuid
 import time
+import random
 
 # Configuration
 HOST = '0.0.0.0'
@@ -39,7 +40,7 @@ class MouseShareApp(QMainWindow):
 
         # Setup wizard
         self.code_label = QLabel("Shared Code:")
-        self.code_input = QLineEdit(str(uuid.uuid4())[:8])
+        self.code_input = QLineEdit(str(random.randint(1000, 9999)))
         self.start_server_btn = QPushButton("Start as Server")
         self.connect_btn = QPushButton("Connect to Server")
         layout.addWidget(self.code_label)
