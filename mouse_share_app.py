@@ -11,6 +11,7 @@ from cryptography.fernet import Fernet
 import uuid
 import time
 import random
+from pynput import mouse
 
 # Configuration
 HOST = '0.0.0.0'
@@ -70,6 +71,14 @@ class MouseShareApp(QMainWindow):
         self.connect_btn.clicked.connect(self.connect_to_server)
         self.layout_btn.clicked.connect(self.configure_layout)
 
+        self.control_on_this_pc = True  # Track if this PC currently has control
+        self.screen_width, self.screen_height = pyautogui.size()
+        self.edge_threshold = 2  # Pixels from edge to trigger transfer
+        self.is_transferring = False
+        # Start global mouse listener if server
+        if self.is_server:
+            self.start_global_mouse_listener()
+
     def setup_network(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -99,7 +108,7 @@ class MouseShareApp(QMainWindow):
             threading.Thread(target=self.handle_client, args=(client, client_id), daemon=True).start()
 
     def connect_to_server(self):
-        server_ip = "127.0.0.1"  # Replace with actual server IP input
+        server_ip = "192.168.145.217"  # Replace with actual server IP input
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             client_socket.connect((server_ip, PORT))
@@ -143,6 +152,10 @@ class MouseShareApp(QMainWindow):
             pyperclip.copy(message["data"])
         elif message["type"] == "file":
             self.handle_file_transfer(message["data"], client_id)
+        elif message["type"] == "control_transfer":
+            if message["data"] == "to_server":
+                self.control_on_this_pc = True
+                self.status_label.setText("Status: Control returned to this PC")
 
     def handle_input(self, data):
         if data["event"] == "mouse_move":
@@ -174,6 +187,31 @@ class MouseShareApp(QMainWindow):
     def configure_layout(self):
         # Placeholder for layout configuration UI
         pass
+
+    def start_global_mouse_listener(self):
+        def on_move(x, y):
+            if not self.control_on_this_pc:
+                return  # Ignore if this PC doesn't have control
+            # Left edge detection
+            if x <= self.edge_threshold and not self.is_transferring:
+                self.is_transferring = True
+                self.transfer_control_to_client()
+            # Right edge detection (for future, if client returns control)
+            elif x >= self.screen_width - self.edge_threshold:
+                pass  # Placeholder for right edge logic
+            else:
+                self.is_transferring = False
+        self.mouse_listener = mouse.Listener(on_move=on_move)
+        self.mouse_listener.start()
+
+    def transfer_control_to_client(self):
+        # Hide or lock local mouse (optional, for now just send message)
+        self.status_label.setText("Status: Transferring control to client...")
+        # Send a message to client to take control
+        self.broadcast({"type": "control_transfer", "data": "to_client"})
+        self.control_on_this_pc = False
+        # Optionally, move mouse to far right to simulate leaving screen
+        pyautogui.moveTo(self.screen_width - 1, pyautogui.position().y)
 
     def mousePressEvent(self, event):
         if self.is_server:
