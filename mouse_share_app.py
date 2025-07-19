@@ -78,6 +78,7 @@ class MouseShareApp(QMainWindow):
         # Start global mouse listener if server
         if self.is_server:
             self.start_global_mouse_listener()
+        print("[DEBUG] UI setup complete.")
 
     def setup_network(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -146,6 +147,7 @@ class MouseShareApp(QMainWindow):
         self.status_label.setText("Status: Disconnected from server")
 
     def process_message(self, message, client_id):
+        print(f"[DEBUG] Received message: {message} from {client_id}")
         if message["type"] == "input":
             self.handle_input(message["data"])
         elif message["type"] == "clipboard":
@@ -153,12 +155,15 @@ class MouseShareApp(QMainWindow):
         elif message["type"] == "file":
             self.handle_file_transfer(message["data"], client_id)
         elif message["type"] == "control_transfer":
+            print(f"[DEBUG] Control transfer message: {message['data']}")
             if message["data"] == "to_server":
                 self.control_on_this_pc = True
                 self.status_label.setText("Status: Control returned to this PC")
+                print("[DEBUG] Control returned to this PC (server)")
             elif message["data"] == "to_client":
                 self.control_on_this_pc = True
                 self.status_label.setText("Status: Control transferred to this PC")
+                print("[DEBUG] Control transferred to this PC (client)")
                 self.start_client_global_mouse_listener()
 
     def handle_input(self, data):
@@ -193,59 +198,65 @@ class MouseShareApp(QMainWindow):
         pass
 
     def start_global_mouse_listener(self):
+        print("[DEBUG] Server: Starting global mouse listener.")
+        self.status_label.setText("Status: Global mouse listener started (server)")
         def on_move(x, y):
             if not self.control_on_this_pc:
-                return  # Ignore if this PC doesn't have control
+                return
             # Left edge detection
             if x <= self.edge_threshold and not self.is_transferring:
+                print(f"[DEBUG] Server: Left edge detected at x={x}, y={y}")
+                self.status_label.setText(f"Status: Left edge detected at x={x}")
                 self.is_transferring = True
                 self.transfer_control_to_client()
-            # Right edge detection (for future, if client returns control)
             elif x >= self.screen_width - self.edge_threshold:
-                pass  # Placeholder for right edge logic
+                pass
             else:
                 self.is_transferring = False
         self.mouse_listener = mouse.Listener(on_move=on_move)
         self.mouse_listener.start()
+        print("[DEBUG] Server: Mouse listener started.")
 
     def start_client_global_mouse_listener(self):
+        print("[DEBUG] Client: Starting global mouse listener.")
+        self.status_label.setText("Status: Global mouse listener started (client)")
         self.client_screen_width, self.client_screen_height = pyautogui.size()
         self.client_edge_threshold = 2
         self.client_is_transferring = False
         def on_move(x, y):
             if not self.control_on_this_pc:
                 return
-            # Right edge detection: return control to server
             if x >= self.client_screen_width - self.client_edge_threshold and not self.client_is_transferring:
+                print(f"[DEBUG] Client: Right edge detected at x={x}, y={y}")
+                self.status_label.setText(f"Status: Right edge detected at x={x}")
                 self.client_is_transferring = True
                 self.transfer_control_to_server()
             elif x <= self.client_edge_threshold:
-                pass  # Placeholder for left edge logic if needed
+                pass
             else:
                 self.client_is_transferring = False
         self.client_mouse_listener = mouse.Listener(on_move=on_move)
         self.client_mouse_listener.start()
+        print("[DEBUG] Client: Mouse listener started.")
 
     def transfer_control_to_client(self):
-        # Hide or lock local mouse (optional, for now just send message)
+        print("[DEBUG] Server: Transferring control to client.")
         self.status_label.setText("Status: Transferring control to client...")
-        # Send a message to client to take control
         self.broadcast({"type": "control_transfer", "data": "to_client"})
         self.control_on_this_pc = False
-        # Optionally, move mouse to far right to simulate leaving screen
         pyautogui.moveTo(self.screen_width - 1, pyautogui.position().y)
 
     def transfer_control_to_server(self):
+        print("[DEBUG] Client: Returning control to server.")
         self.status_label.setText("Status: Returning control to server...")
-        # Send a message to server to take control back
         if "server" in self.clients:
             encrypted = CIPHER.encrypt(json.dumps({"type": "control_transfer", "data": "to_server"}).encode())
             try:
                 self.clients["server"]["socket"].send(encrypted)
-            except:
-                pass
+                print("[DEBUG] Client: Sent control_transfer to server.")
+            except Exception as e:
+                print(f"[DEBUG] Client: Failed to send control_transfer to server: {e}")
         self.control_on_this_pc = False
-        # Optionally, move mouse to far left to simulate leaving screen
         pyautogui.moveTo(1, pyautogui.position().y)
 
     def mousePressEvent(self, event):
