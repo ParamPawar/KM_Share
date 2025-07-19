@@ -156,6 +156,10 @@ class MouseShareApp(QMainWindow):
             if message["data"] == "to_server":
                 self.control_on_this_pc = True
                 self.status_label.setText("Status: Control returned to this PC")
+            elif message["data"] == "to_client":
+                self.control_on_this_pc = True
+                self.status_label.setText("Status: Control transferred to this PC")
+                self.start_client_global_mouse_listener()
 
     def handle_input(self, data):
         if data["event"] == "mouse_move":
@@ -204,6 +208,24 @@ class MouseShareApp(QMainWindow):
         self.mouse_listener = mouse.Listener(on_move=on_move)
         self.mouse_listener.start()
 
+    def start_client_global_mouse_listener(self):
+        self.client_screen_width, self.client_screen_height = pyautogui.size()
+        self.client_edge_threshold = 2
+        self.client_is_transferring = False
+        def on_move(x, y):
+            if not self.control_on_this_pc:
+                return
+            # Right edge detection: return control to server
+            if x >= self.client_screen_width - self.client_edge_threshold and not self.client_is_transferring:
+                self.client_is_transferring = True
+                self.transfer_control_to_server()
+            elif x <= self.client_edge_threshold:
+                pass  # Placeholder for left edge logic if needed
+            else:
+                self.client_is_transferring = False
+        self.client_mouse_listener = mouse.Listener(on_move=on_move)
+        self.client_mouse_listener.start()
+
     def transfer_control_to_client(self):
         # Hide or lock local mouse (optional, for now just send message)
         self.status_label.setText("Status: Transferring control to client...")
@@ -212,6 +234,19 @@ class MouseShareApp(QMainWindow):
         self.control_on_this_pc = False
         # Optionally, move mouse to far right to simulate leaving screen
         pyautogui.moveTo(self.screen_width - 1, pyautogui.position().y)
+
+    def transfer_control_to_server(self):
+        self.status_label.setText("Status: Returning control to server...")
+        # Send a message to server to take control back
+        if "server" in self.clients:
+            encrypted = CIPHER.encrypt(json.dumps({"type": "control_transfer", "data": "to_server"}).encode())
+            try:
+                self.clients["server"]["socket"].send(encrypted)
+            except:
+                pass
+        self.control_on_this_pc = False
+        # Optionally, move mouse to far left to simulate leaving screen
+        pyautogui.moveTo(1, pyautogui.position().y)
 
     def mousePressEvent(self, event):
         if self.is_server:
