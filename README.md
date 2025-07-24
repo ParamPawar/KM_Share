@@ -130,7 +130,7 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ## Contact
 
-For questions, bug reports, or feedback, please open an issue on GitHub or contact \[your-email@example.com\].
+For questions, bug reports, or feedback, please open an issue on GitHub or contact \[parampawar418@gmail.com].
 
 ## Acknowledgements
 
