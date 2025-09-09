@@ -1,6 +1,6 @@
-# 🔗 LinkBridge
+# 🔗 Smart_KVM
 
-LinkBridge is an **open-source, cross-platform LAN utility** for seamless **keyboard & mouse sharing, clipboard sync, file/media sharing, and audio streaming** between devices.  
+Smart_KVM is an **open-source, cross-platform LAN utility** for seamless **keyboard & mouse sharing, clipboard sync, file/media sharing, and audio streaming** between devices.  
 Inspired by **Microsoft Borderless** and **Glidex**, but designed to be **fast, privacy-focused, and open**.
 
 ---
