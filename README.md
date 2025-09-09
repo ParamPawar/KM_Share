@@ -1,142 +1,79 @@
-# Multi-PC Mouse & Keyboard Sharing
+# 🔗 LinkBridge
 
-This project is a desktop application that enables seamless control of multiple computers (up to four) using a single mouse and keyboard over a local network, similar to Microsoft Mouse Without Borders. Built with Python, PyQt5, and secure TCP sockets, it supports input sharing, real-time clipboard synchronization, and file transfers with AES encryption for security. The application is primarily Windows-compatible but designed with modularity for future macOS/Linux support.
-
-## Features
-
-- **Multi-Computer Control**: Seamlessly move your mouse and use your keyboard across multiple computers on the same LAN.
-- **Clipboard Sharing**: Copy and paste text, images, and other clipboard content between connected devices.
-- **File Transfer**: Transfer files to a designated folder on connected devices (drag-and-drop UI planned).
-- **Secure Communication**: All data, including input events and file transfers, is encrypted using AES.
-- **Custom Layout Configuration**: Arrange screens virtually for intuitive control (layout editor in development).
-- **System Tray Integration**: Runs unobtrusively with notifications for connection status and file transfers.
-- **Hotkey Support**: Planned for quick switching and actions (not yet implemented).
-- **Cross-Platform Potential**: Windows-focused with a modular design for future macOS/Linux compatibility.
-
-## Prerequisites
-
-- Python 3.8 or higher
-- Required Python packages:
-  - `PyQt5`: For the graphical user interface
-  - `pyperclip`: For clipboard access
-  - `pyautogui`: For input simulation
-  - `cryptography`: For AES encryption
-- A local network connecting all devices
-- Windows OS (macOS/Linux support pending further testing)
-
-## Installation
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/<your-username>/multi-pc-mouse-keyboard-sharing.git
-   cd multi-pc-mouse-keyboard-sharing
-   ```
-2. Install dependencies:
-
-   ```bash
-   pip install PyQt5 pyperclip pyautogui cryptography
-   ```
-3. Create a `transfers` folder in the project directory for file storage:
-
-   ```bash
-   mkdir transfers
-   ```
-
-## Usage
-
-1. **Start the Server**:
-   - Run the app on the main computer: `python mouse_share_app.py`
-   - Click "Start as Server" to generate a unique pairing code.
-2. **Connect Clients**:
-   - On client computers, run the app and enter the server’s IP address and pairing code.
-   - Click "Connect to Server" to join the network.
-3. **Control Devices**:
-   - Move the mouse or type on the server to control all connected clients.
-   - Copy content (text/images) to sync clipboards across devices.
-   - Send files to the `transfers` folder on clients (drag-and-drop UI in development).
-4. **System Tray**:
-   - The app minimizes to the system tray for unobtrusive operation.
-   - Right-click the tray icon to quit the application.
-
-## Architecture
-
-- **Framework**: PyQt5 for the GUI, pyautogui for input simulation, and cryptography for secure data transfer.
-- **Network**: TCP sockets ensure reliable, ordered communication. AES encryption secures all data exchanges.
-- **Clipboard**: Uses pyperclip for cross-platform clipboard access, with QTimer polling for real-time sync.
-- **File Transfer**: Basic file streaming to a `transfers` folder; future enhancements will support chunked transfers.
-- **Modularity**: Code is structured for extensibility, with separate concerns for UI, network, and input handling.
-
-## Screenshots
-
-*(Screenshots of the GUI, setup wizard, and system tray will be added in future updates.)*
-
-## Development Status
-
-- **Completed**:
-  - Core input sharing (mouse/keyboard).
-  - Clipboard synchronization for text and images.
-  - Basic file transfers to a designated folder.
-  - System tray integration with basic functionality.
-  - Secure communication with AES encryption.
-- **In Progress/Planned**:
-  - Visual layout editor for screen arrangement.
-  - Drag-and-drop file transfer UI.
-  - Hotkey support for quick actions.
-  - Cross-platform compatibility for macOS/Linux (requires pyautogui testing).
-- **Stretch Goals**:
-  - Mobile device support as secondary clients.
-  - Cloud relay for cross-subnet connectivity.
-  - User profiles for saving configurations.
-
-## Testing
-
-- **Setup & Pairing**:
-  - Verify server starts and generates a unique code.
-  - Test client connections with valid/invalid codes.
-- **Input Sharing**:
-  - Confirm mouse movement and clicks propagate to clients.
-  - Validate keyboard input across devices.
-- **Clipboard Sync**:
-  - Test text and image clipboard synchronisation in real-time.
-- **File Transfer**:
-  - Send a small file (&lt;10MB) and verify it appears in the client’s `transfers` folder.
-- **Performance**:
-  - Ensure input latency remains below 100ms.
-  - Test stability with up to four connected clients.
-
-## Known Limitations
-
-- Windows-focused; macOS/Linux support requires additional pyautogui testing.
-- File transfers are basic and best suited for small files (&lt;10MB).
-- Drag-and-drop file transfer UI is not yet implemented.
-- Layout configuration is a placeholder; screen arrangement is not fully functional.
-
-## Contributing
-
-We welcome contributions! To contribute:
-
-1. Fork the repository.
-2. Create a feature branch: `git checkout -b feature-name`
-3. Commit your changes: `git commit -m "Add feature-name"`
-4. Push to the branch: `git push origin feature-name`
-5. Submit a pull request.
-
-Please ensure your code follows the project’s style and includes tests for new features.
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
-
-## Contact
-
-For questions, bug reports, or feedback, please open an issue on GitHub or contact \[parampawar418@gmail.com].
-
-## Acknowledgements
-
-- Built with Python, PyQt5, pyautogui, pyperclip, and cryptography.
-- Inspired by Microsoft Mouse Without Borders.
+LinkBridge is an **open-source, cross-platform LAN utility** for seamless **keyboard & mouse sharing, clipboard sync, file/media sharing, and audio streaming** between devices.  
+Inspired by **Microsoft Borderless** and **Glidex**, but designed to be **fast, privacy-focused, and open**.
 
 ---
 
-*Control multiple PCs with ease, securely, and efficiently!*
+## 🎯 Vision
+
+> *“A single keyboard, mouse, and clipboard for all your devices — Windows, Linux, macOS, Android.”*  
+
+- **Zero Cloud Dependency** → 100% local network communication.  
+- **Low Latency** → Built with **Rust + WebRTC** for speed.  
+- **Open Source** → Transparent, hackable, community-driven.  
+- **Cross-Platform** → Works across desktops and mobiles.  
+
+---
+
+## 🏗️ System Design
+
+📹 [System Design Video](#) *(Add your video link here)*  
+
+High-level overview:  
+1. **Discovery Layer** → Devices find each other via **mDNS/DNS-SD**  
+2. **Transport Layer** → Secure P2P data channels via **WebRTC**  
+3. **Modules**:  
+   - Keyboard & Mouse Input Forwarding  
+   - Clipboard Sync  
+   - File & Media Sharing  
+   - Audio Forwarding (like a network “Bluetooth Receiver”)  
+4. **UI Layer** → Cross-platform desktop/mobile apps powered by **Tauri + React**  
+
+---
+
+## 📚 Roadmap
+
+### ✅ Phase 1 (Week 1 - Prototype)
+- [x] Rust workspace setup  
+- [x] mDNS discovery service (LAN peer finding)  
+- [x] WebRTC transport stub (ping/pong)  
+- [x] Tauri desktop app (basic UI with peer list)  
+
+### 🚧 Phase 2 (Weeks 2–4)
+- [ ] Secure pairing (QR code exchange, TOFU trust model)  
+- [ ] Real WebRTC signaling (via local channel)  
+- [ ] Clipboard sync  
+- [ ] File transfer MVP  
+
+### 🚀 Phase 3
+- [ ] Input sharing (keyboard + mouse)  
+- [ ] Audio sharing (LAN “Bluetooth receiver”)  
+- [ ] Mobile client (Android prototype)  
+
+### 🌐 Phase 4
+- [ ] Full cross-platform support (macOS, Linux, Windows, Android)  
+- [ ] Config UI for manual + auto network config  
+- [ ] Advanced admin tools  
+
+---
+
+## 🔧 Tech Stack
+
+- **Language** → [Rust](https://www.rust-lang.org/)  
+- **Runtime** → [Tokio](https://tokio.rs/) (async)  
+- **Discovery** → [mDNS](https://en.wikipedia.org/wiki/Multicast_DNS)  
+- **Transport** → [WebRTC-rs](https://github.com/webrtc-rs/webrtc)  
+- **UI Framework** → [Tauri](https://tauri.app/) + [React (Vite)](https://vitejs.dev/)  
+- **Logging** → [tracing](https://github.com/tokio-rs/tracing)  
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Rust (`rustup` → [Install Rust](https://rustup.rs/))  
+- Node.js (LTS recommended)  
+- Tauri CLI  
+  ```bash
+  cargo install tauri-cli
