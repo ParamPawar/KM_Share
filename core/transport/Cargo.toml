@@ -1,10 +1,10 @@
 [package]
-name = "core-discovery"
+name = "core-transport"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-mdns = "2"
+webrtc = "0.10"
 tokio = { version = "1", features = ["full"] }
 tracing = "0.1"
-futures = "0.3"
+anyhow = "1"
