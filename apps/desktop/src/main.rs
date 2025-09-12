@@ -1,7 +1,17 @@
+use serde::Serialize;
+
+#[derive(Serialize)]
+struct Peer {
+    ip: String,
+}
+
 #[tauri::command]
-async fn discover_peers() -> Vec<String> {
-    core_discovery::discover_service().await.unwrap();
-    vec!["192.168.0.42".into()] // mock until integrated
+async fn discover_peers() -> Vec<Peer> {
+    // Simulate peer discovery with dummy data
+    vec![
+        Peer { ip: "192.168.0.42".into() },
+        Peer { ip: "192.168.0.43".into() },
+    ]
 }
 
 #[tokio::main]

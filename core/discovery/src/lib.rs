@@ -5,7 +5,7 @@ use tracing::info;
 
 /// findother peers on LAN using mDNS
 pub async fn discover_service() -> Result<(), Error> {
-    let stream = mdns::discover::all("_linkbridge._udp", Duration::from_secs(15))?
+    let stream = mdns::discover::all("Smart_KVM._udp", Duration::from_secs(15))?
         .listen();
 
     tokio::pin!(stream);
@@ -22,5 +22,5 @@ pub async fn discover_service() -> Result<(), Error> {
 
 /// show device on LAN
 pub fn advertise_service() -> Result<mdns::Service, Error> {
-    mdns::Service::new("_linkbridge._udp", 8080)
+    mdns::Service::new("Smart_KVM._udp", 8080)
 }

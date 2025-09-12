@@ -1,0 +1,21 @@
+{
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "devPath": "http://localhost:5173",
+    "distDir": "../ui/dist"
+  },
+  "package": {
+    "productName": "Smart_KVM",
+    "version": "0.1.0"
+  },
+  "tauri": {
+    "windows": [
+      {
+        "title": "Smart_KVM",
+        "width": 800,
+        "height": 600
+      }
+    ]
+  }
+}
