@@ -1,21 +1,25 @@
 {
+  "$schema": "https://schema.tauri.app/config/2",
+  "identifier": "com.smartkvm.app",
+  "productName": "SmartKVM",
+  "version": "0.1.0",
   "build": {
-    "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build",
-    "devPath": "http://localhost:5173",
-    "distDir": "../ui/dist"
+    "beforeDevCommand": "npm run dev",
+    "frontendDist": "../desktop/ui/dist",
+    "devUrl": "http://localhost:5173"
   },
-  "package": {
-    "productName": "Smart_KVM",
-    "version": "0.1.0"
-  },
-  "tauri": {
+  "app": {
     "windows": [
       {
-        "title": "Smart_KVM",
-        "width": 800,
-        "height": 600
+        "title": "Smart KVM",
+        "width": 1000,
+        "height": 800
       }
     ]
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all"
   }
 }
