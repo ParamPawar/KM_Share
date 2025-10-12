@@ -18,7 +18,7 @@ Inspired by **Microsoft Borderless** and **Glidex**, but designed to be **fast, 
 
 ## 🏗️ System Design
 
-📹 [System Design Video](#) *(Add your video link here)*  
+📹 [System Design Video](#) *(https://www.youtube.com/@Eye_TechLab)*  
 
 High-level overview:  
 1. **Discovery Layer** → Devices find each other via **mDNS/DNS-SD**  
