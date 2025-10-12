@@ -1,0 +1,25 @@
+
+{
+  "productName": "Smart_KVM",
+  "version": "0.1.0",
+  "identifier": "com.smartkvm.app",
+  "build": {
+    "beforeBuildCommand": "npm run build --prefix ..@/ui/dist",
+    "beforeDevCommand": "npm run dev --prefix ..@/ui/",
+    "frontendDist": ".."
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Smart KVM",
+        "width": 1000,
+        "height": 700,
+        "resizable": true
+      }
+    ]
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["msi", "dmg", "appimage"]
+  }
+}
